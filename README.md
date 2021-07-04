@@ -1,7 +1,7 @@
 # gnome-wallpaper-script
 
 ``` bash
-Usage: ${script_name} [-h | --help] [-l <ARG>] [-s | --show]
+Usage:  gnome-wallpaper-script [-h | --help] [-l <ARG>] [-s | --show]
 DESCRIPTION
     Download Wallpaper from URLs and Set to the gnome wallpaper.
     OPTIONS:
@@ -12,4 +12,3 @@ DESCRIPTION
     -l
         Set line X to the wallpaper.
 ```
-
