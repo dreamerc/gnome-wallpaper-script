@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+#: Download Wallpaper and Set the gnome wallpaper 
+#  This file follows BSD 3-Clause "New" or "Revised" License.
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+work_dir=$(dirname "$(readlink --canonicalize-existing "${0}" 2> /dev/null)")
+readonly conf_file="${work_dir}/URLs"
+readonly error_reading_conf_file=80
+readonly error_parsing_options=81
+readonly script_name="${0##*/}"
+l_option_flag=0
+show_option_flag=0
+
+trap clean_up ERR EXIT SIGINT SIGTERM
+
+usage() {
+    cat <<USAGE_TEXT
+Usage: ${script_name} [-h | --help] [-l <ARG>] [-s | --show]
+DESCRIPTION
+    Your description here.
+    OPTIONS:
+    -h, --help
+        Print this help and exit.
+    -s, --show
+        Show options for adding.
+    -l
+        Set line X to the wallpaper.
+USAGE_TEXT
+}
+
+clean_up() {
+    trap - ERR EXIT SIGINT SIGTERM
+    # Remove temporary files/directories, log files or rollback changes.
+}
+
+die() {
+    local -r msg="${1}"
+    local -r code="${2:-90}"
+    echo "${msg}" >&2
+    exit "${code}"
+}
+
+if [[ ! -f "${conf_file}" ]]; then
+    die "error reading configuration file: ${conf_file}" "${error_reading_conf_file}"
+fi
+
+# shellcheck source=script.conf
+#. "${conf_file}"
+
+parse_user_options() {
+    local -r args=("${@}")
+    local opts
+
+    # The following code works perfectly for 
+    opts=$(getopt --options l:,s,h --long help,show -- "${args[@]}" 2> /dev/null) || {
+        usage
+        die "error: parsing options" "${error_parsing_options}"
+    }
+
+    eval set -- "${opts}"
+
+    while true; do
+    case "${1}" in
+
+        -l)
+            l_option_flag=1
+            readonly l_arg="${2}"
+	    ###
+	    read file url <<< $(sed -n $l_arg"p" $conf_file | awk '{print $1".jpeg "$2}')
+	    wget -O $file $url
+	    gsettings get org.gnome.desktop.background picture-uri file:///$(pwd)/$file
+	    ###
+            shift
+            shift
+            ;;
+
+        --help|-h)
+            usage
+
+            exit 0
+            shift
+            ;;
+
+        --show|-s)
+            show_option_flag=1
+	    ###
+	    less -N URLs
+	    ###
+            shift
+            ;;
+
+        --)
+            ###
+            usage
+            ###
+	    shift
+            break
+            ;;
+        *)
+            break
+            ;;
+    esac
+    done
+}
+
+parse_user_options "${@}"
+
+if ((show_option_flag)); then
+    echo "show option set"
+fi
+
+if ((l_option_flag)); then
+    # Logic for when -a is set.
+    # "${a_arg}" should also be set.
+    echo "Using -l option -> arg: [${l_arg}]"
+fi
+
+exit 0
