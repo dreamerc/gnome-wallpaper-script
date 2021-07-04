@@ -20,11 +20,7 @@ usage() {
     cat <<USAGE_TEXT
 Usage: ${script_name} [-h | --help] [-l <ARG>] [-s | --show]
 DESCRIPTION
-<<<<<<< HEAD
     Download Wallpaper from URLs and Set to the gnome wallpaper.
-=======
-    Your description here.
->>>>>>> 7382d285e4e5ccd18a04ad1886efb12089de4151
     OPTIONS:
     -h, --help
         Print this help and exit.
@@ -73,32 +69,20 @@ parse_user_options() {
             l_option_flag=1
             readonly l_arg="${2}"
 	    ###
-<<<<<<< HEAD
 	    read file url <<< $(sed -n $l_arg"p" $conf_file | awk '{print $1".jpg "$2}')
 	    wget -O $file $url
 	    gsettings set org.gnome.desktop.background picture-uri file:///$(pwd)/$file
 	    break
-=======
-	    read file url <<< $(sed -n $l_arg"p" $conf_file | awk '{print $1".jpeg "$2}')
-	    wget -O $file $url
-	    gsettings get org.gnome.desktop.background picture-uri file:///$(pwd)/$file
->>>>>>> 7382d285e4e5ccd18a04ad1886efb12089de4151
 	    ###
             shift
             shift
             ;;
 
         --help|-h)
-<<<<<<< HEAD
 	    ###
             usage
             break
 	    ###
-=======
-            usage
-
-            exit 0
->>>>>>> 7382d285e4e5ccd18a04ad1886efb12089de4151
             shift
             ;;
 
@@ -106,14 +90,6 @@ parse_user_options() {
             show_option_flag=1
 	    ###
 	    less -N URLs
-<<<<<<< HEAD
-	    break
-	    ###
-            shift
-            ;;
-        *)
-            usage
-=======
 	    ###
             shift
             ;;
@@ -126,7 +102,6 @@ parse_user_options() {
             break
             ;;
         *)
->>>>>>> 7382d285e4e5ccd18a04ad1886efb12089de4151
             break
             ;;
     esac
