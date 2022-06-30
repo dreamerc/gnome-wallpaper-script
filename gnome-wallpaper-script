@@ -72,6 +72,7 @@ parse_user_options() {
 	    read file url <<< $(sed -n $l_arg"p" $conf_file | awk '{print $1".jpg "$2}')
 	    wget -O $file $url
 	    gsettings set org.gnome.desktop.background picture-uri file:///$(pwd)/$file
+		gsettings set org.gnome.desktop.background picture-uri-dark file:///$(pwd)/$file
 	    break
 	    ###
             shift
